@@ -26,7 +26,7 @@
   ].map((item,index) => ({
     id: "a" + (index + 1),
     name: item[0], category: item[1], quantity: item[2],
-    patrimony: "", condition: item[0] === "Estabilizador" ? "Danificado" : "Não informado",
+    patrimony: "", url: "", condition: item[0] === "Estabilizador" ? "Danificado" : "Não informado",
     notes: item[0] === "Estabilizador" ? "Informado como quebrado na relação inicial." : ""
   }));
 
@@ -36,6 +36,12 @@
   const money = (value) => Number(value || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
   const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const uid = () => "id-" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  function safeUrl(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    try { const parsed = new URL(raw); return ["http:","https:"].includes(parsed.protocol) ? parsed.href : ""; }
+    catch { return ""; }
+  }
 
   function loadState() {
     try {
@@ -94,13 +100,14 @@
     $("inventoryResultCount").textContent = rows.length + (rows.length === 1 ? " registro" : " registros");
     $("inventoryEmpty").classList.toggle("hidden", rows.length > 0);
     $("inventoryBody").innerHTML = rows.map(a => `
-      <tr>
-        <td><input class="patrimony-input" data-patrimony="${escapeHTML(a.id)}" aria-label="Número patrimonial de ${escapeHTML(a.name)}" value="${escapeHTML(a.patrimony)}" placeholder="＋ Informar número"></td>
-        <td><span class="asset-name">${escapeHTML(a.name)}</span>${a.notes ? '<small class="asset-sub">'+escapeHTML(a.notes)+'</small>' : ""}</td>
-        <td><span class="category-tag">${escapeHTML(a.category)}</span></td>
-        <td class="qty-cell">${Number(a.quantity)}</td>
-        <td><span class="condition-badge ${conditionClass(a.condition)}">${escapeHTML(a.condition)}</span></td>
-        <td><div class="row-actions"><button class="icon-button" data-edit-asset="${escapeHTML(a.id)}" title="Editar" aria-label="Editar">✎</button><button class="icon-button delete-button" data-delete-asset="${escapeHTML(a.id)}" title="Excluir" aria-label="Excluir">×</button></div></td>
+      <tr data-asset-row="${escapeHTML(a.id)}">
+        <td><input class="inline-field patrimony-input" data-asset-field="patrimony" data-id="${escapeHTML(a.id)}" aria-label="Número patrimonial" value="${escapeHTML(a.patrimony || "")}" placeholder="Digitar patrimônio"></td>
+        <td><input class="inline-field name-field" data-asset-field="name" data-id="${escapeHTML(a.id)}" aria-label="Nome do equipamento" value="${escapeHTML(a.name)}"><small class="asset-sub">${a.notes ? escapeHTML(a.notes) : "Clique nos campos para editar"}</small></td>
+        <td><select class="inline-field" data-asset-field="category" data-id="${escapeHTML(a.id)}">${["Cabos e conexões","Computadores e periféricos","Vídeo e câmeras","Áudio","Energia","Mobiliário","Acessórios","Outros"].map(c=>'<option '+(a.category===c?'selected':'')+'>'+c+'</option>').join("")}</select></td>
+        <td><input class="inline-field qty-input" data-asset-field="quantity" data-id="${escapeHTML(a.id)}" type="number" min="1" step="1" value="${Number(a.quantity)}" aria-label="Quantidade"></td>
+        <td><select class="inline-field" data-asset-field="condition" data-id="${escapeHTML(a.id)}">${["Não informado","Bom","Regular","Danificado","Em manutenção"].map(c=>'<option '+((a.condition||"Não informado")===c?'selected':'')+'>'+c+'</option>').join("")}</select></td>
+        <td><div class="link-editor"><input class="inline-field url-field" data-asset-field="url" data-id="${escapeHTML(a.id)}" type="url" value="${escapeHTML(a.url || "")}" placeholder="Colar link aqui"><a class="open-link ${a.url ? "" : "is-disabled"}" href="${a.url ? escapeHTML(a.url) : "#"}" target="_blank" rel="noopener noreferrer" ${a.url ? "" : 'aria-disabled="true"'}>↗ Abrir</a></div></td>
+        <td><div class="row-actions"><button class="icon-button delete-button" data-delete-asset="${escapeHTML(a.id)}" title="Excluir" aria-label="Excluir">×</button></div></td>
       </tr>`).join("");
     $("inventoryNavCount").textContent = state.assets.length;
   }
@@ -115,13 +122,15 @@
     ).sort((a,b) => ({"Alta":0,"Média":1,"Baixa":2}[a.priority] - {"Alta":0,"Média":1,"Baixa":2}[b.priority]));
     $("purchasesBody").innerHTML = rows.map(p => {
       const total = Number(p.quantity) * Number(p.value);
-      return `<tr>
-        <td><span class="priority-badge ${priorityClass(p.priority)}">${escapeHTML(p.priority)}</span></td>
-        <td><span class="asset-name">${escapeHTML(p.name)}</span>${p.notes ? '<small class="asset-sub">'+escapeHTML(p.notes)+'</small>' : ""}</td>
-        <td class="qty-cell">${Number(p.quantity)}</td>
-        <td>${money(p.value)}</td><td class="money">${money(total)}</td>
-        <td><span class="status-badge ${p.status === "Comprado" ? "done" : "pending"}">${escapeHTML(p.status)}</span></td>
-        <td><div class="row-actions"><button class="icon-button" data-edit-purchase="${escapeHTML(p.id)}" title="Editar" aria-label="Editar">✎</button><button class="icon-button delete-button" data-delete-purchase="${escapeHTML(p.id)}" title="Excluir" aria-label="Excluir">×</button></div></td>
+      return `<tr data-purchase-row="${escapeHTML(p.id)}">
+        <td><select class="inline-field priority-field" data-purchase-field="priority" data-id="${escapeHTML(p.id)}"><option ${p.priority==="Alta"?"selected":""}>Alta</option><option ${p.priority==="Média"?"selected":""}>Média</option><option ${p.priority==="Baixa"?"selected":""}>Baixa</option></select></td>
+        <td><input class="inline-field name-field" data-purchase-field="name" data-id="${escapeHTML(p.id)}" value="${escapeHTML(p.name)}" aria-label="Nome do item"><small class="asset-sub">${p.notes ? escapeHTML(p.notes) : "Clique nos campos para editar"}</small></td>
+        <td><input class="inline-field qty-input" data-purchase-field="quantity" data-id="${escapeHTML(p.id)}" type="number" min="1" step="1" value="${Number(p.quantity)}" aria-label="Quantidade"></td>
+        <td><input class="inline-field money-input" data-purchase-field="value" data-id="${escapeHTML(p.id)}" type="number" min="0" step="0.01" value="${Number(p.value)}" aria-label="Valor unitário em reais"></td>
+        <td class="money" data-purchase-total="${escapeHTML(p.id)}">${money(total)}</td>
+        <td><select class="inline-field" data-purchase-field="status" data-id="${escapeHTML(p.id)}"><option ${p.status==="Pendente"?"selected":""}>Pendente</option><option ${p.status==="Comprado"?"selected":""}>Comprado</option></select></td>
+        <td><div class="link-editor"><input class="inline-field url-field" data-purchase-field="url" data-id="${escapeHTML(p.id)}" type="url" value="${escapeHTML(p.url || "")}" placeholder="Colar link aqui"><a class="open-link ${p.url ? "" : "is-disabled"}" href="${p.url ? escapeHTML(p.url) : "#"}" target="_blank" rel="noopener noreferrer" ${p.url ? "" : 'aria-disabled="true"'}>↗ Abrir</a></div></td>
+        <td><div class="row-actions"><button class="icon-button delete-button" data-delete-purchase="${escapeHTML(p.id)}" title="Excluir" aria-label="Excluir">×</button></div></td>
       </tr>`;
     }).join("");
     $("purchasesEmpty").classList.toggle("hidden", rows.length > 0);
@@ -156,7 +165,7 @@
     if (!a) return;
     $("assetModalTitle").textContent = "Editar equipamento";
     $("assetId").value = a.id; $("assetName").value = a.name; $("assetCategory").value = a.category;
-    $("assetQuantity").value = a.quantity; $("assetPatrimony").value = a.patrimony || "";
+    $("assetQuantity").value = a.quantity; $("assetPatrimony").value = a.patrimony || ""; $("assetUrl").value = a.url || "";
     $("assetCondition").value = a.condition || "Não informado"; $("assetNotes").value = a.notes || "";
     openModal("assetModal");
   }
@@ -166,7 +175,7 @@
     $("purchaseModalTitle").textContent = "Editar compra";
     $("purchaseId").value = p.id; $("purchaseName").value = p.name; $("purchasePriority").value = p.priority;
     $("purchaseQuantity").value = p.quantity; $("purchaseValue").value = p.value;
-    $("purchaseStatus").value = p.status; $("purchaseNotes").value = p.notes || "";
+    $("purchaseStatus").value = p.status; $("purchaseUrl").value = p.url || ""; $("purchaseNotes").value = p.notes || "";
     openModal("purchaseModal");
   }
   function resetAssetForm() { $("assetForm").reset(); $("assetId").value = ""; $("assetQuantity").value = 1; $("assetModalTitle").textContent = "Adicionar equipamento"; }
@@ -182,7 +191,7 @@
   $("assetForm").addEventListener("submit",e => {
     e.preventDefault();
     const id = $("assetId").value;
-    const record = {id:id || uid(),name:$("assetName").value.trim(),category:$("assetCategory").value,quantity:Math.max(1,Number($("assetQuantity").value)),patrimony:$("assetPatrimony").value.trim(),condition:$("assetCondition").value,notes:$("assetNotes").value.trim()};
+    const record = {id:id || uid(),name:$("assetName").value.trim(),category:$("assetCategory").value,quantity:Math.max(1,Number($("assetQuantity").value)),patrimony:$("assetPatrimony").value.trim(),url:safeUrl($("assetUrl").value),condition:$("assetCondition").value,notes:$("assetNotes").value.trim()};
     if (!record.name || !record.category) return;
     if (id) state.assets = state.assets.map(a => a.id === id ? record : a); else state.assets.push(record);
     saveState(); render(); closeModal("assetModal"); showToast(id ? "Equipamento atualizado." : "Equipamento adicionado.");
@@ -190,7 +199,7 @@
   $("purchaseForm").addEventListener("submit",e => {
     e.preventDefault();
     const id = $("purchaseId").value;
-    const record = {id:id || uid(),name:$("purchaseName").value.trim(),priority:$("purchasePriority").value,quantity:Math.max(1,Number($("purchaseQuantity").value)),value:Math.max(0,Number($("purchaseValue").value)),status:$("purchaseStatus").value,notes:$("purchaseNotes").value.trim()};
+    const record = {id:id || uid(),name:$("purchaseName").value.trim(),priority:$("purchasePriority").value,quantity:Math.max(1,Number($("purchaseQuantity").value)),value:Math.max(0,Number($("purchaseValue").value)),status:$("purchaseStatus").value,url:safeUrl($("purchaseUrl").value),notes:$("purchaseNotes").value.trim()};
     if (!record.name) return;
     if (id) state.purchases = state.purchases.map(p => p.id === id ? record : p); else state.purchases.push(record);
     saveState(); render(); closeModal("purchaseModal"); showToast(id ? "Compra atualizada." : "Compra adicionada.");
@@ -224,6 +233,80 @@
       input.blur();
     }
   });
+  function updateInlineField(kind, input) {
+    const id = input.dataset.id;
+    const field = input.dataset[kind + "Field"];
+    const list = kind === "asset" ? state.assets : state.purchases;
+    const record = list.find(item => item.id === id);
+    if (!record || !field) return;
+    let value = input.value;
+    if (field === "url") {
+      value = safeUrl(value);
+      if (input.value.trim() && !value) {
+        input.setCustomValidity("Insira um link começando com https:// ou http://");
+        input.reportValidity();
+        return;
+      }
+      input.setCustomValidity("");
+    } else if (field === "quantity") {
+      value = Math.max(1, Math.floor(Number(value) || 1));
+      input.value = value;
+    } else if (field === "value") {
+      value = Math.max(0, Number(value) || 0);
+      input.value = value;
+    } else {
+      value = String(value).trim();
+    }
+    if (record[field] === value) return;
+    record[field] = value;
+    saveState();
+    if (kind === "asset") renderOverview();
+    else {
+      const row = input.closest("tr");
+      const totalCell = row && row.querySelector("[data-purchase-total]");
+      if (totalCell) totalCell.textContent = money(Number(record.quantity) * Number(record.value));
+      const urlLink = row && row.querySelector(".open-link");
+      if (urlLink && field === "url") {
+        urlLink.href = value || "#";
+        urlLink.classList.toggle("is-disabled", !value);
+        urlLink.setAttribute("aria-disabled", value ? "false" : "true");
+      }
+      renderOverview();
+      const total = state.purchases.reduce((sum,p) => sum + Number(p.quantity) * Number(p.value),0);
+      $("purchaseTotal").textContent = money(total);
+      $("highPriorityCount").textContent = state.purchases.filter(p => p.priority === "Alta" && p.status !== "Comprado").length;
+      $("purchasedCount").textContent = state.purchases.filter(p => p.status === "Comprado").length;
+    }
+    if (field === "url") {
+      const row = input.closest("tr");
+      const link = row && row.querySelector(".open-link");
+      if (link) {
+        link.href = value || "#";
+        link.classList.toggle("is-disabled", !value);
+        link.setAttribute("aria-disabled", value ? "false" : "true");
+      }
+    }
+    showToast("Alteração salva.");
+  }
+  $("inventoryBody").addEventListener("change",e => {
+    const input = e.target.closest("[data-asset-field]");
+    if (input) updateInlineField("asset", input);
+  });
+  $("purchasesBody").addEventListener("change",e => {
+    const input = e.target.closest("[data-purchase-field]");
+    if (input) updateInlineField("purchase", input);
+  });
+  $("inventoryBody").addEventListener("keydown",e => {
+    if (e.key === "Enter" && e.target.matches("[data-asset-field]")) {
+      e.preventDefault(); e.target.blur();
+    }
+  });
+  $("purchasesBody").addEventListener("keydown",e => {
+    if (e.key === "Enter" && e.target.matches("[data-purchase-field]")) {
+      e.preventDefault(); e.target.blur();
+    }
+  });
+
   $("inventoryBody").addEventListener("click",e => {
     const edit = e.target.closest("[data-edit-asset]");
     const del = e.target.closest("[data-delete-asset]");
