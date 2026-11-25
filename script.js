@@ -195,11 +195,34 @@
     if (id) state.purchases = state.purchases.map(p => p.id === id ? record : p); else state.purchases.push(record);
     saveState(); render(); closeModal("purchaseModal"); showToast(id ? "Compra atualizada." : "Compra adicionada.");
   });
+  function savePatrimonyField(input, notify = false) {
+    const asset = state.assets.find(a => a.id === input.dataset.patrimony);
+    if (!asset) return;
+    const value = input.value.trim();
+    if (asset.patrimony === value) return;
+    asset.patrimony = value;
+    saveState();
+    renderOverview();
+    if (notify) showToast("Número patrimonial salvo.");
+  }
+  // O número patrimonial é editado diretamente na célula, sem abrir o formulário do lápis.
+  $("inventoryBody").addEventListener("input",e => {
+    const input = e.target.closest("[data-patrimony]");
+    if (input) savePatrimonyField(input);
+  });
   $("inventoryBody").addEventListener("change",e => {
     const input = e.target.closest("[data-patrimony]");
-    if (!input) return;
-    const asset = state.assets.find(a => a.id === input.dataset.patrimony);
-    if (asset) { asset.patrimony = input.value.trim(); saveState(); renderOverview(); showToast("Número patrimonial salvo."); }
+    if (input) {
+      savePatrimonyField(input, true);
+      input.value = input.value.trim();
+    }
+  });
+  $("inventoryBody").addEventListener("keydown",e => {
+    const input = e.target.closest("[data-patrimony]");
+    if (input && e.key === "Enter") {
+      e.preventDefault();
+      input.blur();
+    }
   });
   $("inventoryBody").addEventListener("click",e => {
     const edit = e.target.closest("[data-edit-asset]");
