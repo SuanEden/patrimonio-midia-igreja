@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1424">
+  <title>Patrimônio da Mídia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div><strong>MÍDIA</strong><span>GESTÃO PATRIMONIAL</span></div>
+      </div>
+      <div class="side-label">GESTÃO</div>
+      <nav class="nav">
+        <button class="nav-link active" data-view="overview"><span class="nav-icon">◫</span> Visão geral</button>
+        <button class="nav-link" data-view="inventory"><span class="nav-icon">▤</span> Inventário <span class="nav-count" id="inventoryNavCount">0</span></button>
+        <button class="nav-link" data-view="purchases"><span class="nav-icon">＋</span> Plano de compras <span class="nav-count" id="purchaseNavCount">0</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="side-note"><span class="status-dot"></span><div><strong>Dados neste dispositivo</strong><small>Salvamento automático ativo</small></div></div>
+        <button class="nav-link" id="backupButton"><span class="nav-icon">⇩</span> Exportar backup</button>
+        <label class="nav-link import-label"><span class="nav-icon">⇧</span> Importar backup<input type="file" id="importFile" accept="application/json"></label>
+      </div>
+      <div class="sidebar-footer">CONTROLE INTERNO · MÍDIA</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menu">☰</button>
+        <div class="breadcrumb">Mídia <span>/</span> <strong id="breadcrumbCurrent">Visão geral</strong></div>
+        <div class="top-actions">
+          <span class="save-state"><i></i> Salvo neste dispositivo</span>
+          <button class="presentation-button" id="presentationButton"><span>▣</span> Modo apresentação</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-overview">
+        <div class="page-heading">
+          <div><div class="eyebrow">CONTROLE PATRIMONIAL</div><h1>Visão geral</h1><p>A estrutura atual dos equipamentos e as necessidades de investimento da mídia.</p></div>
+          <div class="date-chip"><span class="gold-dot"></span> PAINEL DE GESTÃO</div>
+        </div>
+        <div class="welcome-panel">
+          <div class="welcome-copy"><span class="eyebrow light">MÍDIA · CONTROLE E PLANEJAMENTO</span><h2>Organização hoje.<br><em>Planejamento para amanhã.</em></h2><p>Um panorama do que temos, do que precisa ser identificado e do que ainda precisamos adquirir.</p></div>
+          <div class="welcome-seal"><span>GESTÃO</span><strong>M</strong><span>MÍDIA</span></div>
+          <div class="welcome-line"></div>
+        </div>
+        <div class="section-title"><div><h2>Resumo do inventário</h2><p>Indicadores atualizados conforme os cadastros.</p></div><button class="text-action" data-go="inventory">Ver inventário <span>→</span></button></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>ITENS CADASTRADOS</span><span class="stat-icon">▤</span></div><strong id="statTypes">0</strong><small>Tipos de equipamentos</small></article>
+          <article class="stat-card"><div class="stat-top"><span>UNIDADES NO TOTAL</span><span class="stat-icon">▦</span></div><strong id="statUnits">0</strong><small>Quantidade registrada</small></article>
+          <article class="stat-card"><div class="stat-top"><span>SEM PATRIMÔNIO</span><span class="stat-icon">◇</span></div><strong id="statPending">0</strong><small>Tipos ainda sem identificação</small></article>
+          <article class="stat-card"><div class="stat-top"><span>ITENS DANIFICADOS</span><span class="stat-icon warning-icon">!</span></div><strong id="statDamaged">0</strong><small>Precisam de avaliação</small></article>
+        </div>
+        <div class="overview-bottom">
+          <article class="panel priority-panel"><div class="panel-heading"><div><span class="eyebrow">PRÓXIMAS AQUISIÇÕES</span><h3>Plano de compras</h3></div><button class="circle-arrow" data-go="purchases">↗</button></div><div id="overviewPurchases" class="mini-list"></div></article>
+          <article class="panel condition-panel"><div class="panel-heading"><div><span class="eyebrow">CONSERVAÇÃO</span><h3>Estado dos equipamentos</h3></div></div><div id="conditionSummary" class="condition-summary"></div></article>
+        </div>
+        <div class="presentation-foot">PATRIMÔNIO DA MÍDIA <span>·</span> DOCUMENTO DE CONTROLE INTERNO</div>
+      </section>
+
+      <section class="view" id="view-inventory">
+        <div class="page-heading compact-heading"><div><div class="eyebrow">ACERVO DE EQUIPAMENTOS</div><h1>Inventário</h1><p>Registre os itens existentes e informe o número patrimonial quando disponível.</p></div><button class="primary-button" id="addAssetButton"><span>＋</span> Adicionar item</button></div>
+        <div class="toolbar"><div class="search-box"><span>⌕</span><input id="inventorySearch" type="search" placeholder="Buscar equipamento ou patrimônio..."></div><select id="categoryFilter"><option value="">Todas as categorias</option></select><select id="conditionFilter"><option value="">Todos os estados</option><option>Bom</option><option>Regular</option><option>Danificado</option><option>Em manutenção</option><option>Não informado</option></select><span class="result-count" id="inventoryResultCount">0 registros</span></div>
+        <div class="table-panel"><div class="table-scroll"><table><thead><tr><th class="patrimony-col">PATRIMÔNIO</th><th>EQUIPAMENTO</th><th>CATEGORIA</th><th class="qty-col">QTD.</th><th>CONSERVAÇÃO</th><th class="action-col">AÇÕES</th></tr></thead><tbody id="inventoryBody"></tbody></table></div><div class="table-empty hidden" id="inventoryEmpty">Nenhum item encontrado com esses filtros.</div></div>
+        <div class="table-note"><span>ⓘ</span> Clique no campo de patrimônio para preencher ou alterar a identificação. As alterações são salvas automaticamente.</div>
+      </section>
+
+      <section class="view" id="view-purchases">
+        <div class="page-heading compact-heading"><div><div class="eyebrow">PLANEJAMENTO DE INVESTIMENTO</div><h1>Plano de compras</h1><p>Organize as necessidades, defina prioridades e apresente o investimento previsto.</p></div><button class="primary-button" id="addPurchaseButton"><span>＋</span> Adicionar compra</button></div>
+        <div class="purchase-summary">
+          <div class="purchase-total"><span>INVESTIMENTO ESTIMADO</span><strong id="purchaseTotal">R$ 0,00</strong><small>Soma dos valores previstos</small></div>
+          <div class="purchase-metric"><span>ITENS PLANEJADOS</span><strong id="purchaseCount">0</strong></div>
+          <div class="purchase-metric"><span>PRIORIDADE ALTA</span><strong id="highPriorityCount">0</strong></div>
+          <div class="purchase-metric"><span>JÁ ADQUIRIDOS</span><strong id="purchasedCount">0</strong></div>
+        </div>
+        <div class="toolbar purchase-toolbar"><div class="search-box"><span>⌕</span><input id="purchaseSearch" type="search" placeholder="Buscar item..."></div><select id="priorityFilter"><option value="">Todas as prioridades</option><option>Alta</option><option>Média</option><option>Baixa</option></select><select id="purchaseStatusFilter"><option value="">Todas as situações</option><option>Pendente</option><option>Comprado</option></select><span class="result-count" id="purchaseResultCount">0 itens</span></div>
+        <div class="table-panel"><div class="table-scroll"><table><thead><tr><th>PRIORIDADE</th><th>ITEM / DESCRIÇÃO</th><th class="qty-col">QTD.</th><th>VALOR UNITÁRIO</th><th>TOTAL</th><th>SITUAÇÃO</th><th class="action-col">AÇÕES</th></tr></thead><tbody id="purchasesBody"></tbody></table></div><div class="table-empty" id="purchasesEmpty">Ainda não há compras cadastradas. Adicione as necessidades da mídia para montar o planejamento.</div></div>
+        <div class="table-note"><span>ⓘ</span> Informe o valor unitário estimado. O sistema calcula o total automaticamente pela quantidade.</div>
+      </section>
+      <footer class="main-footer"><span>MÍDIA <b>·</b> GESTÃO PATRIMONIAL</span><span id="footerYear"></span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="assetModal"><form class="modal" id="assetForm"><div class="modal-heading"><div><span class="eyebrow">INVENTÁRIO</span><h2 id="assetModalTitle">Adicionar equipamento</h2></div><button type="button" class="close-modal" data-close="assetModal">×</button></div><input type="hidden" id="assetId"><label>Nome do equipamento<input id="assetName" required maxlength="90" placeholder="Ex.: Cabo HDMI"></label><div class="form-row"><label>Categoria<select id="assetCategory" required><option value="">Selecione</option><option>Cabos e conexões</option><option>Computadores e periféricos</option><option>Vídeo e câmeras</option><option>Áudio</option><option>Energia</option><option>Mobiliário</option><option>Acessórios</option><option>Outros</option></select></label><label>Quantidade<input id="assetQuantity" type="number" min="1" step="1" value="1" required></label></div><label>Número patrimonial <span class="optional">opcional</span><input id="assetPatrimony" maxlength="50" placeholder="Digite o número, se já possuir"></label><label>Estado de conservação<select id="assetCondition"><option>Não informado</option><option>Bom</option><option>Regular</option><option>Danificado</option><option>Em manutenção</option></select></label><label>Observações<textarea id="assetNotes" rows="2" placeholder="Detalhes, localização ou identificação..."></textarea></label><div class="modal-actions"><button type="button" class="secondary-button" data-close="assetModal">Cancelar</button><button class="primary-button" type="submit">Salvar equipamento</button></div></form></div>
+
+  <div class="modal-backdrop hidden" id="purchaseModal"><form class="modal" id="purchaseForm"><div class="modal-heading"><div><span class="eyebrow">PLANEJAMENTO</span><h2 id="purchaseModalTitle">Adicionar compra</h2></div><button type="button" class="close-modal" data-close="purchaseModal">×</button></div><input type="hidden" id="purchaseId"><label>O que precisa ser comprado?<input id="purchaseName" required maxlength="100" placeholder="Ex.: Estabilizador de energia"></label><div class="form-row"><label>Prioridade<select id="purchasePriority"><option>Alta</option><option selected>Média</option><option>Baixa</option></select></label><label>Quantidade<input id="purchaseQuantity" type="number" min="1" step="1" value="1" required></label></div><div class="form-row"><label>Valor unitário estimado (R$)<input id="purchaseValue" type="number" min="0" step="0.01" placeholder="0,00" required></label><label>Situação<select id="purchaseStatus"><option>Pendente</option><option>Comprado</option></select></label></div><label>Observações <span class="optional">opcional</span><textarea id="purchaseNotes" rows="2" placeholder="Motivo, modelo desejado ou referência..."></textarea></label><div class="modal-actions"><button type="button" class="secondary-button" data-close="purchaseModal">Cancelar</button><button class="primary-button" type="submit">Salvar compra</button></div></form></div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
