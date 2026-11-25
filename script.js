@@ -102,7 +102,7 @@
     $("inventoryBody").innerHTML = rows.map(a => `
       <tr data-asset-row="${escapeHTML(a.id)}">
         <td><input class="inline-field patrimony-input" data-asset-field="patrimony" data-id="${escapeHTML(a.id)}" aria-label="Número patrimonial" value="${escapeHTML(a.patrimony || "")}" placeholder="Digitar patrimônio"></td>
-        <td><input class="inline-field name-field" data-asset-field="name" data-id="${escapeHTML(a.id)}" aria-label="Nome do equipamento" value="${escapeHTML(a.name)}"><small class="asset-sub">${a.notes ? escapeHTML(a.notes) : "Clique nos campos para editar"}</small></td>
+        <td><input class="inline-field name-field" data-asset-field="name" data-id="${escapeHTML(a.id)}" aria-label="Nome do equipamento" value="${escapeHTML(a.name)}"><input class="inline-field note-field" data-asset-field="notes" data-id="${escapeHTML(a.id)}" value="${escapeHTML(a.notes || "")}" placeholder="Observação (opcional)" aria-label="Observações do equipamento"></td>
         <td><select class="inline-field" data-asset-field="category" data-id="${escapeHTML(a.id)}">${["Cabos e conexões","Computadores e periféricos","Vídeo e câmeras","Áudio","Energia","Mobiliário","Acessórios","Outros"].map(c=>'<option '+(a.category===c?'selected':'')+'>'+c+'</option>').join("")}</select></td>
         <td><input class="inline-field qty-input" data-asset-field="quantity" data-id="${escapeHTML(a.id)}" type="number" min="1" step="1" value="${Number(a.quantity)}" aria-label="Quantidade"></td>
         <td><select class="inline-field" data-asset-field="condition" data-id="${escapeHTML(a.id)}">${["Não informado","Bom","Regular","Danificado","Em manutenção"].map(c=>'<option '+((a.condition||"Não informado")===c?'selected':'')+'>'+c+'</option>').join("")}</select></td>
@@ -124,7 +124,7 @@
       const total = Number(p.quantity) * Number(p.value);
       return `<tr data-purchase-row="${escapeHTML(p.id)}">
         <td><select class="inline-field priority-field" data-purchase-field="priority" data-id="${escapeHTML(p.id)}"><option ${p.priority==="Alta"?"selected":""}>Alta</option><option ${p.priority==="Média"?"selected":""}>Média</option><option ${p.priority==="Baixa"?"selected":""}>Baixa</option></select></td>
-        <td><input class="inline-field name-field" data-purchase-field="name" data-id="${escapeHTML(p.id)}" value="${escapeHTML(p.name)}" aria-label="Nome do item"><small class="asset-sub">${p.notes ? escapeHTML(p.notes) : "Clique nos campos para editar"}</small></td>
+        <td><input class="inline-field name-field" data-purchase-field="name" data-id="${escapeHTML(p.id)}" value="${escapeHTML(p.name)}" aria-label="Nome do item"><input class="inline-field note-field" data-purchase-field="notes" data-id="${escapeHTML(p.id)}" value="${escapeHTML(p.notes || "")}" placeholder="Observação (opcional)" aria-label="Observações da compra"></td>
         <td><input class="inline-field qty-input" data-purchase-field="quantity" data-id="${escapeHTML(p.id)}" type="number" min="1" step="1" value="${Number(p.quantity)}" aria-label="Quantidade"></td>
         <td><input class="inline-field money-input" data-purchase-field="value" data-id="${escapeHTML(p.id)}" type="number" min="0" step="0.01" value="${Number(p.value)}" aria-label="Valor unitário em reais"></td>
         <td class="money" data-purchase-total="${escapeHTML(p.id)}">${money(total)}</td>
