@@ -78,3 +78,111 @@ tbody tr:hover{background:#f6f9fc}
   .link-editor{min-width:210px}
   .toolbar select{color:#263750}
 }
+
+/* AD Templo Central · versão executiva com maior legibilidade */
+:root{
+  --navy:#004561;--navy2:#075875;--navy3:#0b6682;
+  --gold:#EF5A1F;--gold2:#FFB07A;
+  --paper:#F5F7F8;--white:#fff;--ink:#202B32;
+  --muted:#51636E;--line:#D5E0E5;
+  --green:#237755;--red:#B33D3D;
+  --shadow:0 10px 28px rgba(0,69,97,.08);
+}
+body{background:var(--paper);color:var(--ink)}
+.sidebar{background:#004561;color:#fff}
+.brand-mark{border-color:#FFB07A;color:#fff}
+.brand span,.side-note small,.side-label,.sidebar-footer{color:#D7E9EF}
+.nav-link{color:#E0EFF3}
+.nav-icon{color:#FFB07A}
+.nav-link.active{background:#14617B;color:#fff;box-shadow:inset 3px 0 #FFB07A}
+.nav-link:hover{background:#145E77;color:#fff}
+.nav-count{background:#FFFFFF29;color:#fff}
+.side-note{border-color:#FFFFFF35}
+.sidebar .status-dot{background:#8FDCBB}
+.breadcrumb,.breadcrumb strong{color:#36515E}
+.breadcrumb span{color:#8AA1AC}
+.save-state{color:#47616F}
+.mobile-menu{color:#004561}
+.page-heading h1,.section-title h2,.panel-heading h3{color:#004561}
+.page-heading p,.section-title p{color:#536A74}
+.eyebrow,.page-heading .eyebrow,.panel-heading .eyebrow{color:#B84217}
+.gold-dot{background:#EF5A1F}
+.date-chip{color:#48626D;border-color:#C6D6DD}
+.welcome-panel{background:linear-gradient(115deg,#003C54 0%,#004F6D 72%,#076484 100%);box-shadow:0 12px 28px #00456122}
+.welcome-panel:after{border-color:#FFB07A44;box-shadow:0 0 0 35px #FFB07A0A,0 0 0 70px #FFB07A08}
+.welcome-copy .eyebrow,.welcome-copy h2 em{color:#FFBB8F}
+.welcome-copy p{color:#E0EDF2}
+.welcome-seal{border-color:#FFB07A88;color:#FFCFAD}
+.welcome-seal:before{border-color:#FFB07A55}
+.stat-card,.panel,.table-panel{border-color:#D7E2E8;box-shadow:0 3px 13px #0045610B}
+.stat-top,.stat-card small{color:#506571}
+.stat-card>strong{color:#004561}
+.stat-icon{background:#FCE9DF;color:#B84217}
+.warning-icon{background:#FFF0ED;color:#B33D3D}
+.text-action{color:#B84217}
+.circle-arrow{color:#B84217;border-color:#D6E2E7}
+.mini-row .mini-value,.condition-line b{color:#004561}
+.mini-row small,.condition-line,.empty-hint{color:#506571}
+.track{background:#DBE7EC}
+.track span{background:#EF5A1F}
+.presentation-foot{color:#5D727C}
+.presentation-foot span,.main-footer b{color:#EF5A1F}
+.search-box,.toolbar select{border-color:#C6D6DD;color:#253B47;background:#fff}
+.search-box input{color:#253B47}
+.search-box input::placeholder{color:#667C87}
+.result-count,.table-note{color:#526873}
+thead{background:#EAF1F4}
+th{color:#395867;border-bottom-color:#C9D9E0}
+td{color:#253A45;border-bottom-color:#E1EBEF}
+tbody tr:hover{background:#F1F7F9}
+.category-tag{background:#E6F0F4;color:#24546A}
+.asset-name,.money{color:#004561}
+.asset-sub{color:#526873}
+.patrimony-input{color:#004561}
+.patrimony-input::placeholder{color:#6B7E87}
+.inline-field,.patrimony-input{background:#fff;color:#263C47;border-color:#BED0D8}
+.inline-field:hover{border-color:#6B9AAA}
+.inline-field:focus,.patrimony-input:focus{border-color:#EF5A1F;box-shadow:0 0 0 3px #EF5A1F22;background:#FFFCFA}
+.inline-field::placeholder{color:#667E89}
+.open-link{background:#EAF4F8;border-color:#9FC2D1;color:#004561}
+.open-link:hover{background:#DDEDF4;border-color:#4D91AA}
+.presentation-button{background:#fff;color:#004561;border-color:#8EABB9}
+.presentation-button:hover{color:#B84217;border-color:#EF5A1F}
+.primary-button{background:#004561;color:#fff}
+.primary-button:hover{background:#006081}
+.primary-button span{color:#FFB07A}
+.purchase-summary{background:#004561}
+.purchase-total>span,.purchase-metric>span,.purchase-total small{color:#DDECF1}
+.purchase-total strong{color:#FFCFAD}
+.purchase-metric strong{color:#fff}
+.modal label{color:#314E5D}
+.modal input,.modal select,.modal textarea{color:#263C47;border-color:#BDCED7}
+.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:#EF5A1F;box-shadow:0 0 0 3px #EF5A1F22}
+.toast{background:#004561;color:#fff}
+.presentation-exit{background:#004561;border-color:#EF5A1F}
+@media(max-width:760px){
+  .main{padding:0 14px}
+  .view{padding-top:24px}
+  .page-heading p{font-size:13px;line-height:1.55}
+  .page-heading h1{font-size:27px}
+  .page-heading{gap:12px}
+  .topbar{height:64px}
+  .mobile-menu{min-width:44px;min-height:44px;color:#004561}
+  .nav-link{min-height:46px}
+  .compact-heading{flex-wrap:wrap}
+  .compact-heading .primary-button{font-size:12px;min-height:44px;padding:10px 14px}
+  .compact-heading .primary-button span{font-size:17px}
+  .toolbar select{min-height:44px;font-size:13px}
+  .search-box{height:44px}
+  .search-box input{font-size:16px}
+  .inline-field{font-size:15px;min-height:42px}
+  .modal input,.modal select,.modal textarea{font-size:16px;min-height:44px}
+  .modal label{font-size:13px}
+  .link-editor{min-width:210px}
+  .open-link{min-height:42px;font-size:12px}
+  .icon-button{min-width:38px;min-height:38px}
+  .table-note{font-size:12px;line-height:1.5}
+  .stat-card small{font-size:11px}
+  .welcome-copy p{font-size:12px;color:#E0EDF2}
+  .welcome-seal{opacity:.38}
+}
