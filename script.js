@@ -78,7 +78,7 @@
   }
   function setView(name) {
     document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "view-" + name));
-    document.querySelectorAll(".nav-link[data-view]").forEach(b => b.classList.toggle("active", b.dataset.view === name));
+    document.querySelectorAll("[data-view]").forEach(b => b.classList.toggle("active", b.dataset.view === name));
     const labels = {overview:"Visão geral",inventory:"Inventário",purchases:"Plano de compras"};
     $("breadcrumbCurrent").textContent = labels[name] || labels.overview;
     $("sidebar").classList.remove("open");
@@ -183,6 +183,7 @@
 
   document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click",() => setView(b.dataset.view)));
   document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click",() => setView(b.dataset.go)));
+  $("mobileSettings").addEventListener("click",()=> $("sidebar").classList.toggle("open"));
   $("mobileMenu").addEventListener("click",() => $("sidebar").classList.toggle("open"));
   $("addAssetButton").addEventListener("click",() => { resetAssetForm(); openModal("assetModal"); });
   $("addPurchaseButton").addEventListener("click",() => { resetPurchaseForm(); openModal("purchaseModal"); });
@@ -257,6 +258,7 @@
     } else {
       value = String(value).trim();
     }
+    if (field === "name" && !value) { input.value = record.name; return; }
     if (record[field] === value) return;
     record[field] = value;
     saveState();
