@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261126-4">
+  <link rel="stylesheet" href="style.css?v=20261126-5">
 </head>
 <body>
   <div class="app-shell">
@@ -92,6 +92,6 @@
 
   <div class="modal-backdrop hidden" id="purchaseModal"><form class="modal" id="purchaseForm"><div class="modal-heading"><div><span class="eyebrow">PLANEJAMENTO</span><h2 id="purchaseModalTitle">Adicionar compra</h2></div><button type="button" class="close-modal" data-close="purchaseModal">×</button></div><input type="hidden" id="purchaseId"><label>O que precisa ser comprado?<input id="purchaseName" required maxlength="100" placeholder="Ex.: Estabilizador de energia"></label><div class="form-row"><label>Prioridade<select id="purchasePriority"><option>Alta</option><option selected>Média</option><option>Baixa</option></select></label><label>Quantidade<input id="purchaseQuantity" type="number" min="1" step="1" value="1" required></label></div><div class="form-row"><label>Valor unitário estimado (R$)<input id="purchaseValue" type="number" min="0" step="0.01" placeholder="0,00" required></label><label>Situação<select id="purchaseStatus"><option>Pendente</option><option>Comprado</option></select></label></div><label>Link do produto <span class="optional">opcional</span><input id="purchaseUrl" type="url" placeholder="Cole o link da loja ou do produto"></label><label>Observações <span class="optional">opcional</span><textarea id="purchaseNotes" rows="2" placeholder="Motivo, modelo desejado ou referência..."></textarea></label><div class="modal-actions"><button type="button" class="secondary-button" data-close="purchaseModal">Cancelar</button><button class="primary-button" type="submit">Salvar compra</button></div></form></div>
   <div class="toast" id="toast" role="status"></div>
-  <script src="script.js?v=20261126-4"></script>
+  <script src="script.js?v=20261126-5"></script>
 </body>
 </html>
