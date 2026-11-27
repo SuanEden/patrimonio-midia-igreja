@@ -1,0 +1,36 @@
+name: Apps Script sync
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'apps-script/**'
+      - '.github/workflows/apps-script.yml'
+permissions:
+  contents: read
+concurrency:
+  group: apps-script-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install clasp
+        run: npm install -g @google/clasp@3.4.1
+      - name: Authenticate
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+        run: |
+          test -n "$CLASPRC_JSON"
+          umask 077
+          printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
+      - name: Push source
+        working-directory: apps-script
+        run: clasp push --force
+      - name: Remove credentials
+        if: always()
+        run: rm -f "$HOME/.clasprc.json"
