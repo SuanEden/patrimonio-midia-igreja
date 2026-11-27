@@ -108,7 +108,7 @@
         <td><select class="inline-field" data-asset-field="condition" data-id="${escapeHTML(a.id)}">${["Não informado","Bom","Regular","Danificado","Em manutenção"].map(c=>'<option '+((a.condition||"Não informado")===c?'selected':'')+'>'+c+'</option>').join("")}</select></td>
         <td><div class="link-editor"><input class="inline-field url-field" data-asset-field="url" data-id="${escapeHTML(a.id)}" type="url" value="${escapeHTML(a.url || "")}" placeholder="Colar link aqui"><a class="open-link ${a.url ? "" : "is-disabled"}" href="${a.url ? escapeHTML(a.url) : "#"}" target="_blank" rel="noopener noreferrer" ${a.url ? "" : 'aria-disabled="true"'}>↗ Abrir</a></div></td>
         <td><div class="row-actions"><button class="icon-button delete-button" data-delete-asset="${escapeHTML(a.id)}" title="Excluir" aria-label="Excluir">×</button></div></td>
-      </tr>`).join("");
+      <td class="mobile-card-summary"><button type="button" class="mobile-card-toggle" aria-expanded="false"><span>${escapeHTML(a.name)}<small>${Number(a.quantity)} un. · ${escapeHTML(a.condition || "Não informado")}</small></span><span>⌄</span></button></td></tr>`).join("");
     $("inventoryNavCount").textContent = state.assets.length;
   }
   function priorityClass(priority) { return {"Alta":"high","Média":"medium","Baixa":"low"}[priority] || "medium"; }
@@ -131,7 +131,7 @@
         <td><select class="inline-field" data-purchase-field="status" data-id="${escapeHTML(p.id)}"><option ${p.status==="Pendente"?"selected":""}>Pendente</option><option ${p.status==="Comprado"?"selected":""}>Comprado</option></select></td>
         <td><div class="link-editor"><input class="inline-field url-field" data-purchase-field="url" data-id="${escapeHTML(p.id)}" type="url" value="${escapeHTML(p.url || "")}" placeholder="Colar link aqui"><a class="open-link ${p.url ? "" : "is-disabled"}" href="${p.url ? escapeHTML(p.url) : "#"}" target="_blank" rel="noopener noreferrer" ${p.url ? "" : 'aria-disabled="true"'}>↗ Abrir</a></div></td>
         <td><div class="row-actions"><button class="icon-button delete-button" data-delete-purchase="${escapeHTML(p.id)}" title="Excluir" aria-label="Excluir">×</button></div></td>
-      </tr>`;
+      <td class="mobile-card-summary"><button type="button" class="mobile-card-toggle" aria-expanded="false"><span>${escapeHTML(p.name)}<small>${money(total)} · ${escapeHTML(p.priority)}</small></span><span>⌄</span></button></td></tr>`;
     }).join("");
     $("purchasesEmpty").classList.toggle("hidden", rows.length > 0);
     $("purchaseResultCount").textContent = rows.length + (rows.length === 1 ? " item" : " itens");
@@ -288,6 +288,7 @@
         link.setAttribute("aria-disabled", value ? "false" : "true");
       }
     }
+    const summary=input.closest("tr")?.querySelector(".mobile-card-toggle > span:first-child"); if(summary){summary.firstChild.textContent=record.name; const small=summary.querySelector("small"); if(small)small.textContent=kind==="asset"?record.quantity+" un. · "+record.condition:money(Number(record.quantity)*Number(record.value))+" · "+record.priority;}
     showToast("Alteração salva.");
   }
   $("inventoryBody").addEventListener("change",e => {
@@ -365,5 +366,6 @@
   document.addEventListener("keydown",e => { if (e.key === "Escape" && document.body.classList.contains("presentation-mode") && !document.fullscreenElement) exitPresentation(); });
   document.addEventListener("fullscreenchange",() => { if (!document.fullscreenElement && document.body.classList.contains("presentation-mode")) exitPresentation(); });
 
+  document.addEventListener("click", e => { const b=e.target.closest(".mobile-card-toggle"); if(!b)return; const row=b.closest("tr"); const expanded=row.classList.toggle("expanded"); b.setAttribute("aria-expanded",String(expanded)); });
   render();
 })();
