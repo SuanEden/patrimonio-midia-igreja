@@ -240,3 +240,10 @@ tbody tr:hover{background:#F1F7F9}
 .close-modal{width:44px;height:44px}
 .presentation-mode .table-panel td:last-child{display:none}
 }
+
+.mobile-card-toggle{display:none}
+@media(max-width:760px){
+body{background:#f3f6f7}.main{padding-inline:16px}.topbar{position:sticky;top:0;background:#f3f6f7;z-index:8}.welcome-panel{border-radius:16px}.stat-card{border-radius:12px}.stat-top{font-size:10px}.stat-card small{font-size:12px}.table-panel tr{padding:14px;border-radius:14px;gap:12px}.mobile-card-toggle{display:flex;grid-column:1/-1;grid-row:1;width:100%;align-items:center;justify-content:space-between;background:none;border:0;text-align:left;color:#004561;padding:4px 0;min-height:48px;font-size:16px;font-weight:700;gap:12px}.mobile-card-toggle small{display:block;color:#51636e;font-size:12px;font-weight:500;margin-top:5px}.mobile-card-toggle span:last-child{font-size:22px}.table-panel tr:not(.expanded) td{display:none!important}.table-panel tr.expanded td:nth-child(2){grid-row:2}.table-panel tr.expanded .mobile-card-toggle{border-bottom:1px solid #d5e0e5;padding-bottom:12px}.table-panel tr.expanded .mobile-card-toggle span:last-child{transform:rotate(180deg)}.table-panel td:last-child .delete-button{width:auto;padding:0 14px;font-size:14px}.mobile-nav{box-shadow:0 -4px 20px #0045610b}.compact-heading .primary-button{border-radius:10px}.modal{background:#fff}.modal-actions{border-top:1px solid #d5e0e5}.presentation-mode .mobile-card-toggle{display:none}.presentation-mode .table-panel tr:not(.expanded) td{display:block!important}.presentation-mode .table-panel tr td:last-child{display:none!important}
+}
+
+.mobile-card-summary{display:none!important}@media(max-width:760px){.table-panel tr .mobile-card-summary{display:block!important;grid-column:1/-1;grid-row:1}.table-panel tr .mobile-card-summary:before{display:none!important}.table-panel tr.expanded td:nth-child(2){grid-row:2}.table-panel tr.expanded td:nth-last-child(2){grid-column:1/-1;display:flex;justify-content:flex-end}.table-panel tr .mobile-card-summary .mobile-card-toggle{display:flex}.presentation-mode .table-panel tr .mobile-card-summary{display:none!important}}
